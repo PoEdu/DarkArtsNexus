@@ -3234,7 +3234,7 @@ vue@^3.3.2, vue@^3.3.4:
     "@vue/server-renderer" "3.3.4"
     "@vue/shared" "3.3.4"
 
-vuepress-plugin-comment2@^2.0.0:
+vuepress-plugin-comment2@2.0.0-beta.226:
   version "2.0.0-beta.226"
   resolved "https://registry.yarnpkg.com/vuepress-plugin-comment2/-/vuepress-plugin-comment2-2.0.0-beta.226.tgz#2a440defef05d6a1d82efc56b182afb3758677e3"
   integrity sha512-iIo6WydKgMJRkqNJSKOi8IDFYNC4LASMx42cIx4hEwEU+ZANM6+4dRge70opr5RcgviOcpqLFm5F6RLvEit4Rg==
@@ -3251,7 +3251,7 @@ vuepress-plugin-comment2@^2.0.0:
     vuepress-plugin-sass-palette "2.0.0-beta.226"
     vuepress-shared "2.0.0-beta.226"
 
-vuepress-plugin-copy-code2@^2.0.0:
+vuepress-plugin-copy-code2@2.0.0-beta.226:
   version "2.0.0-beta.226"
   resolved "https://registry.yarnpkg.com/vuepress-plugin-copy-code2/-/vuepress-plugin-copy-code2-2.0.0-beta.226.tgz#0e66e752c22050f9c0f7bcaa610749b391e543d0"
   integrity sha512-BcPfkIBlYPxmXKFDiOu0tFsyH4ARxc6z1H94ffEmCQ7DtncV+quhoY2EFdoGqaedXMSU1ETStUemfIhEFL3Xrg==
@@ -3271,7 +3271,7 @@ vuepress-plugin-markdown-define2@^1.0.0:
   resolved "https://registry.yarnpkg.com/vuepress-plugin-markdown-define2/-/vuepress-plugin-markdown-define2-1.0.0.tgz#807e04f7656a0f2f2d8b9fdc6554a442d471bfb9"
   integrity sha512-wrQcoamaTShQ9tbJaKIXu0bbhbaRcAa9TyOkYAIIdtz4UkabU3UPtsnJ/rA6N3maVpoEg33RrgJcq8oxiEK6Mw==
 
-vuepress-plugin-md-enhance@^2.0.0:
+vuepress-plugin-md-enhance@2.0.0-beta.226:
   version "2.0.0-beta.226"
   resolved "https://registry.yarnpkg.com/vuepress-plugin-md-enhance/-/vuepress-plugin-md-enhance-2.0.0-beta.226.tgz#879a3a8f75356bc24bd3068ae69f9dfdf15c5476"
   integrity sha512-wx7TjUVUl2rMAgRenLVzle7JS6wSp2WbaD1ZN9fyHtXCyMRODL/3XTrJG+w/C6jWIuw2F7UBwOpMwUiPsMjqGg==
@@ -3358,7 +3358,7 @@ vuepress-vite@2.0.0-beta.63:
     "@vuepress/theme-default" "2.0.0-beta.63"
     vue "^3.3.4"
 
-vuepress@^2.0.0:
+vuepress@2.0.0-beta.63:
   version "2.0.0-beta.63"
   resolved "https://registry.yarnpkg.com/vuepress/-/vuepress-2.0.0-beta.63.tgz#a6c0799231a7cc280f4086cbba342a118b168312"
   integrity sha512-P9AnMkrRHVl5kUlBcMbLMvkWoVFyxopQl9zLVWGnTRBXFqxY5IkfP+BvTVfLRXuW2itC11Q3TW6OnJtlY8V1sQ==
