@@ -2,7 +2,10 @@ import { defaultTheme } from 'vuepress'
 import { copyCodePlugin } from "vuepress-plugin-copy-code2";
 import { commentPlugin } from "vuepress-plugin-comment2";
 import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
+import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
+import { getDirname, path } from '@vuepress/utils'
 
+const __dirname = getDirname(import.meta.url)
 
 export default {
     title: '现代黑魔法学院',
@@ -38,5 +41,9 @@ export default {
             mermaid: true,
             attrs: true,
         }),
+        registerComponentsPlugin({
+            componentsDir: path.resolve(__dirname, '../Components'),
+        }),
+      
     ],
 }
