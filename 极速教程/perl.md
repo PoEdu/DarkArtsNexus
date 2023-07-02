@@ -23,7 +23,7 @@ Copyright 1987-2013, Larry Wall
 你可以在命令行下输入`perl -e <perl code>` 或 `perl <perl-script.pl>`来执行一段perl代码。一般perl脚本的后缀是`*.pl`
 
 或者在Linux下，你可以把一个脚本的解释器写在脚本开头
-```pl
+```perl
 #!/usr/env perl
 
 print "Hello world~!\n"
@@ -34,14 +34,14 @@ print "Hello world~!\n"
 
 下面是一些基础语法的示例，调用函数：
 
-```pl
+```perl
 print("Hello, world\n");
 print "Hello, world\n";
 ```
 
 注释有两种，单行或多行:
 
-```pl
+```perl
 # 这是一个单行注释
 print "Hello, world\n";
  
@@ -59,7 +59,7 @@ print "Hello, world\n";
 如果使用`our`关键字，则生命期是整个模块。
 
 例如，下面的：
-```pl
+```perl
 my $email='myemail\@xxx.com'; 
 my @to=('john', 'david');
 our %contacts={'john' => 'john\@xxx.com', 'david'=>'david\@xxx.com' };
@@ -69,16 +69,16 @@ our %contacts={'john' => 'john\@xxx.com', 'david'=>'david\@xxx.com' };
 
 于是你可以用`[N]`来对数组进行取值，需要注意的是，这里类型符号要以取到的值的类型为准：
 
-```pl
+```perl
 print $to[0]  # "john" 这里取到的是一个scala, 所以用$符号，即使@to是一个数组
 ```
 你也可以使用负数作为下标，这样就可以从末尾开始往前取某个元素：
-```pl
+```perl
 print $to[-1]; # "david"
 ```
 
 类似的，对于hash表，我们可以用`{N}` 来获取其元素
-```pl
+```perl
 print $contacts{"jonh"} # 'john@xxx.com'
 ```
 
@@ -89,7 +89,7 @@ print $contacts{"jonh"} # 'john@xxx.com'
 
 
 控制流语句主要有 if..elsif..else 语句：
-```pl
+```perl
 $a = 100;
 # 使用 == 判断两个数是否相等
 if( $a  ==  20 ){
@@ -104,33 +104,47 @@ if( $a  ==  20 ){
 }
 ```
 
+
+
+
 循环语句：
-```pl
+
+::: code-tabs#loops
+
+@tab while
+```perl
 # 执行 while 循环
 while( $a < 20 ){
    printf "a 的值为 : $a\n";
    $a = $a + 1;
 }
-
+```
+@tab until
+```perl
 # 执行 until 循环
 until( $a > 10 ){
    printf "a 的值为 : $a\n";
    $a = $a + 1;
 }
-
+```
+@tab for
+```perl
 # 执行 for 循环
 for( $a = 0; $a < 10; $a = $a + 1 ){
     print "a 的值为: $a\n";
 }
-
-
+```
+@tab foreach
+```perl
 @list = (2, 12, 36, 42, 51);
  
 # 执行foreach 循环
 foreach $a (@list){
     print "a 的值为: $a\n";
 }
-
+```
+@tab endless
+```perl
 # 无限循环
 for( ; ; )
 {
@@ -138,9 +152,11 @@ for( ; ; )
 }
 ```
 
+:::
+
 当你在循环中想跳出时，perl也提供了如下几种控制语句：
 
-```pl
+```perl
 next;
 ```
 
@@ -148,7 +164,7 @@ next;
 字符串操作
 
 拼接，使用`.`运算符：
-```pl
+```perl
 my $string = "world";
 print "Hello ".$string; # "Hello world"
 ```

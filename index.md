@@ -38,7 +38,7 @@ color: rgba(253, 230, 138, 0.15)
 title: MiniC编译器
 desc: 制作一款类C语言编译器
 logo: /icons/C.png
-link: https://mrhope.site
+link: /MiniC/序言.md
 color: rgba(253, 230, 138, 0.15)
 
 ```
@@ -47,7 +47,7 @@ color: rgba(253, 230, 138, 0.15)
 title: MiniLua
 desc: 制作一款类似Lua的脚本语言解释器
 logo: /icons/Lua.svg
-link: https://mrhope.site
+link: /MiniLua/序言.md
 color: rgba(253, 230, 138, 0.15)
 
 ```
@@ -56,7 +56,7 @@ color: rgba(253, 230, 138, 0.15)
 title: MiniFlexBison
 desc: 制作类似FlexBison的代码生成工具
 logo: /icons/heckert_gnu_white.png
-link: https://mrhope.site
+link: /MiniFlexBison/序言.md
 color: rgba(253, 230, 138, 0.15)
 
 ```
@@ -68,7 +68,7 @@ color: rgba(253, 230, 138, 0.15)
 title: 算法导论
 desc: 梳理算法和其背后思想
 logo: /icons/algorithm.png
-link: https://mrhope.site
+link: /算法导论/序言.md
 color: rgba(253, 230, 138, 0.15)
 ```
 
@@ -76,7 +76,7 @@ color: rgba(253, 230, 138, 0.15)
 title: 数据结构
 desc: 复习被用到的数据结构
 logo: /icons/data-structure.png
-link: https://mrhope.site
+link: /数据结构/序言.md
 color: rgba(253, 230, 138, 0.15)
 ```
 
@@ -84,11 +84,17 @@ color: rgba(253, 230, 138, 0.15)
 title: 设计思想
 desc: 了解复杂软件设计方法
 logo: /icons/design.png
-link: https://mrhope.site
+link: /设计思想/序言.md
 color: rgba(253, 230, 138, 0.15)
 ```
 
-
+```card
+title: 极速教程
+desc: 快速补齐本教程所需基础知识
+logo: /icons/lighting.png
+link: /极速教程/序言.md
+color: rgba(253, 230, 138, 0.15)
+```
 
 
 

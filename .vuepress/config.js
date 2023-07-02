@@ -37,13 +37,15 @@ export default {
         }),
         mdEnhancePlugin({
             // your options
+            tab: true,
+            codetabs: true,
             card: true,
             mermaid: true,
             attrs: true,
+            footnote: true,
         }),
         registerComponentsPlugin({
             componentsDir: path.resolve(__dirname, '../Components'),
         }),
-      
     ],
 }
