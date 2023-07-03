@@ -2,6 +2,7 @@
   "name": "PoIndex",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module", 
   "license": "MIT",
   "scripts": {
     "docs:dev": "vuepress dev",
@@ -16,5 +17,9 @@
     "vuepress-plugin-copy-code2": "2.0.0-beta.226",
     "vuepress-plugin-markdown-define2": "^1.0.0",
     "vuepress-plugin-md-enhance": "2.0.0-beta.226"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "element-plus": "^2.3.7"
   }
 }

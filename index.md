@@ -3,6 +3,12 @@ home: true
 title: Home
 ---
 
+<style>
+.vp-card-logo {
+    border-radius: 0%;
+}
+</style>
+
 ## 编译技术
 
 ```card
@@ -18,7 +24,7 @@ color: rgba(253, 230, 138, 0.15)
 title: 运行时环境
 desc: 了解运行时环境的原理
 logo: /icons/compiler-exp.png
-link: https://mrhope.site
+link: /运行时环境/序言.md
 color: rgba(253, 230, 138, 0.15)
 
 ```
@@ -27,7 +33,7 @@ color: rgba(253, 230, 138, 0.15)
 title: LLVM指南
 desc: 学会用编译器框架开发
 logo: /icons/LLVM.png
-link: https://mrhope.site
+link: /LLVM指南/序言.md
 color: rgba(253, 230, 138, 0.15)
 
 ```
@@ -69,7 +75,7 @@ title: 算法导论
 desc: 梳理算法和其背后思想
 logo: /icons/algorithm.png
 link: /算法导论/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 ```
 
 ```card
@@ -77,7 +83,7 @@ title: 数据结构
 desc: 复习被用到的数据结构
 logo: /icons/data-structure.png
 link: /数据结构/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 ```
 
 ```card
@@ -85,7 +91,7 @@ title: 设计思想
 desc: 了解复杂软件设计方法
 logo: /icons/design.png
 link: /设计思想/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 ```
 
 ```card
@@ -93,11 +99,17 @@ title: 极速教程
 desc: 快速补齐本教程所需基础知识
 logo: /icons/lighting.png
 link: /极速教程/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 ```
 
 
-
+```card
+title: 图形学实践
+desc: 学习图形学的基本原理
+logo: /icons/lighting.png
+link: /图形学实践/序言.md
+color: rgba(230, 230, 230, 0.15)
+```
 
 
 <CommentService />
