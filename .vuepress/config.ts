@@ -55,6 +55,7 @@ export default {
                 category: "General",
                 categoryId: "DIC_kwDOJfuqJs4CWUDF",
             },
+            copyCode: {},
             mdEnhance: {
                 // your options
                 tabs: true,
