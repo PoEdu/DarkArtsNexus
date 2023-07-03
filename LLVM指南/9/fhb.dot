@@ -1,0 +1,35 @@
+digraph g {
+	graph [
+		rankdir = "LR"
+	];
+	node [
+		fontsize = "16"
+		shape = "ellipse"
+	];
+	edge [
+	];
+
+	"node0" [
+		label = "<f0> stack | <f1> | <f2> | ..."
+		shape = "record"	
+	];
+
+	"node1" [
+		label = "<f0> 全局符号 | a | work |  | ..."
+		shape = "record"
+	]
+
+	"node2" [
+		label = "<f0> 局部符号 | a |  | ..."
+		shape = "record"
+	]
+
+	"node0":f1 -> "node1":f0 [
+		id = 0
+	];
+
+	"node0":f2 -> "node2":f0 [
+		id = 1
+	];
+
+}
