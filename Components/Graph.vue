@@ -31,6 +31,10 @@ function loadScript(src, callback) {
 }
 
 
+
+</script>
+<!-- 
+<script>
 loadScript('https://d3js.org/d3.v3.min.js', function () {
     // set up SVG for D3
     var width = 600,
@@ -403,10 +407,7 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
 
 
 });
-
-</script>
-
-
+</script> -->
 
 <style>
 svg {

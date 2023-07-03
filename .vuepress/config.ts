@@ -1,52 +1,70 @@
-import { defaultTheme } from 'vuepress'
-import { copyCodePlugin } from "vuepress-plugin-copy-code2";
-import { commentPlugin } from "vuepress-plugin-comment2";
-import { mdEnhancePlugin } from "vuepress-plugin-md-enhance";
 import { registerComponentsPlugin } from '@vuepress/plugin-register-components'
 import { getDirname, path } from '@vuepress/utils'
+import { hopeTheme } from "vuepress-theme-hope";
+import { Navbar } from "./navbar.js";
+import { Sidebar } from "./sidebar.js";
 
 const __dirname = getDirname(import.meta.url)
 
 export default {
+    base: "/",
+    lang: "zh-CN",
     title: '现代黑魔法学院',
     description: '一个交互实验式编译器技术学习站',
-    theme: defaultTheme({
-        // 默认主题配置
-        navbar: [
-            {
-                text: '首页',
-                link: '/',
-            },
-            {
-                text: '路线图',
-                link: '/sitemap',
-            }
-        ],
-    }),
+
     plugins: [
-        commentPlugin({
-            // your options
-            provider: "Giscus",
-            repo:"PoEdu/discussion",
-            repoId:"R_kgDOJfuqJg",
-            category:"General",
-            categoryId:"DIC_kwDOJfuqJs4CWUDF",
-        }),
-        copyCodePlugin({
-            // your options
-        }),
-        mdEnhancePlugin({
-            // your options
-            tabs: true,
-            codetabs: true,
-            card: true,
-            mermaid: true,
-            attrs: true,
-            footnote: true,
-            include: true,
-        }),
         registerComponentsPlugin({
             componentsDir: path.resolve(__dirname, '../Components'),
         }),
     ],
+
+    theme: hopeTheme({
+        hostname: "https://PoIndex.github.io/",
+
+        author: {
+            name: "西风逍遥游",
+            url: "https://github.com/sunxfancy",
+        },
+
+        iconAssets: "fontawesome-with-brands",
+
+        logo: "/logo.svg",
+
+        repo: "https://github.com/PoEdu/PoIndex",
+
+        // navbar
+        navbar: Navbar,
+
+        // sidebar
+        sidebar: Sidebar,
+
+        footer: "默认页脚",
+
+        displayFooter: true,
+
+        metaLocales: {
+            editLink: "在 GitHub 上编辑此页",
+        },
+
+        plugins: {
+            comment: {
+                // your options
+                provider: "Giscus",
+                repo: "PoEdu/discussion",
+                repoId: "R_kgDOJfuqJg",
+                category: "General",
+                categoryId: "DIC_kwDOJfuqJs4CWUDF",
+            },
+            mdEnhance: {
+                // your options
+                tabs: true,
+                codetabs: true,
+                card: true,
+                mermaid: true,
+                attrs: true,
+                footnote: true,
+                include: true,
+            },
+        }
+    })
 }

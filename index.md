@@ -16,7 +16,7 @@ title: 编译原理
 desc: 了解编译器的内部机制
 logo: /icons/compiler.png
 link: /编译原理/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
@@ -25,7 +25,7 @@ title: 运行时环境
 desc: 了解运行时环境的原理
 logo: /icons/compiler-exp.png
 link: /运行时环境/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
@@ -34,7 +34,7 @@ title: LLVM指南
 desc: 学会用编译器框架开发
 logo: /icons/LLVM.png
 link: /LLVM指南/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
@@ -45,7 +45,7 @@ title: MiniC编译器
 desc: 制作一款类C语言编译器
 logo: /icons/C.png
 link: /MiniC/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
@@ -54,7 +54,7 @@ title: MiniLua
 desc: 制作一款类似Lua的脚本语言解释器
 logo: /icons/Lua.svg
 link: /MiniLua/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
@@ -63,7 +63,7 @@ title: MiniFlexBison
 desc: 制作类似FlexBison的代码生成工具
 logo: /icons/heckert_gnu_white.png
 link: /MiniFlexBison/序言.md
-color: rgba(253, 230, 138, 0.15)
+color: rgba(230, 230, 230, 0.15)
 
 ```
 
