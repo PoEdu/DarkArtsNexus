@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  root: 'docs',
+  root: './',
   optimizeDeps: {
     include: ['vue'],
   },

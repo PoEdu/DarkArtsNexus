@@ -7,8 +7,6 @@ export default defineClientConfig({
         if (!__VUEPRESS_SSR__) {
             var ElementPlus = await import('element-plus');
             app.use(ElementPlus);
-
-            
         }
     },
     setup() { 

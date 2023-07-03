@@ -2,7 +2,6 @@
     <p>Graph Editor</p>
     <svg id="container" width="600" height="400"></svg>
     <ElButton>Button</ElButton>
-
 </template>
 
 
@@ -30,11 +29,6 @@ function loadScript(src, callback) {
     head.appendChild(script);
 }
 
-
-
-</script>
-<!-- 
-<script>
 loadScript('https://d3js.org/d3.v3.min.js', function () {
     // set up SVG for D3
     var width = 600,
@@ -407,7 +401,7 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
 
 
 });
-</script> -->
+</script> 
 
 <style>
 svg {
