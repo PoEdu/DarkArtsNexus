@@ -1,11 +1,11 @@
 Perl 极速教程
-==================
+=============
 
 Perl是一门古老的通用编程脚本语言，内部集成了好用的正则表达式功能，python，php等语言在后来的发展中极大的借鉴了perl的很多设计思想。如果你学习过PHP，那么你会发现很多语法都是极其相似的。
 
-## 安装与环境配置
+## 安装与环境配置 
 
-一般如果你在使用linux时，系统往往已经自带了perl，你可以用`perl -v`来查看perl是否安装并显示其版本信息：
+一般如果你在使用linux时，系统往往已经自带了perl，你可以用 `perl -v`来查看perl是否安装并显示其版本信息：
 
 ```sh
 $ perl -v
@@ -17,18 +17,17 @@ Copyright 1987-2013, Larry Wall
 ……
 ```
 
-如果没有，那么你需要下载安装perl语言，可以访问`https://www.perl.org/get.html`来获取最新 Perl解释器。
+如果没有，那么你需要下载安装perl语言，可以访问 `https://www.perl.org/get.html`来获取最新 Perl解释器。
 
-
-你可以在命令行下输入`perl -e <perl code>` 或 `perl <perl-script.pl>`来执行一段perl代码。一般perl脚本的后缀是`*.pl`
+你可以在命令行下输入 `perl -e <perl code>` 或 `perl <perl-script.pl>`来执行一段perl代码。一般perl脚本的后缀是 `*.pl`
 
 或者在Linux下，你可以把一个脚本的解释器写在脚本开头
+
 ```perl
 #!/usr/env perl
 
 print "Hello world~!\n"
 ```
-
 
 ## 基础语法
 
@@ -54,41 +53,40 @@ print "Hello, world\n";
 ```
 
 变量，主要有三种  标量（scalar）、数组（array）和哈希（hashes）
-每种类型都有属于自己的符号：分别是`$`、`@`和`%`
-变量定义如果使用`my`关键字，生命期直到其所在的代码块结束或者文件的末尾。
-如果使用`our`关键字，则生命期是整个模块。
+每种类型都有属于自己的符号：分别是 `$`、`@`和 `%`
+变量定义如果使用 `my`关键字，生命期直到其所在的代码块结束或者文件的末尾。
+如果使用 `our`关键字，则生命期是整个模块。
 
 例如，下面的：
+
 ```perl
 my $email='myemail\@xxx.com'; 
 my @to=('john', 'david');
 our %contacts={'john' => 'john\@xxx.com', 'david'=>'david\@xxx.com' };
 ```
 
-小心！如果你把email存放到一个数组里时，由于默认的解析规则，@有可能会被perl当作是一个@xxx的全局变量，所以必须对`@`转义,写成`\@`.
+小心！如果你把email存放到一个数组里时，由于默认的解析规则，@有可能会被perl当作是一个@xxx的全局变量，所以必须对 `@`转义,写成 `\@`.
 
-于是你可以用`[N]`来对数组进行取值，需要注意的是，这里类型符号要以取到的值的类型为准：
+于是你可以用 `[N]`来对数组进行取值，需要注意的是，这里类型符号要以取到的值的类型为准：
 
 ```perl
 print $to[0]  # "john" 这里取到的是一个scala, 所以用$符号，即使@to是一个数组
 ```
+
 你也可以使用负数作为下标，这样就可以从末尾开始往前取某个元素：
+
 ```perl
 print $to[-1]; # "david"
 ```
 
-类似的，对于hash表，我们可以用`{N}` 来获取其元素
+类似的，对于hash表，我们可以用 `{N}` 来获取其元素
+
 ```perl
 print $contacts{"jonh"} # 'john@xxx.com'
 ```
 
-
-
-
-
-
-
 控制流语句主要有 if..elsif..else 语句：
+
 ```perl
 $a = 100;
 # 使用 == 判断两个数是否相等
@@ -104,14 +102,12 @@ if( $a  ==  20 ){
 }
 ```
 
-
-
-
 循环语句：
 
 ::: code-tabs#loops
 
 @tab while
+
 ```perl
 # 执行 while 循环
 while( $a < 20 ){
@@ -119,7 +115,9 @@ while( $a < 20 ){
    $a = $a + 1;
 }
 ```
+
 @tab until
+
 ```perl
 # 执行 until 循环
 until( $a > 10 ){
@@ -127,14 +125,18 @@ until( $a > 10 ){
    $a = $a + 1;
 }
 ```
+
 @tab for
+
 ```perl
 # 执行 for 循环
 for( $a = 0; $a < 10; $a = $a + 1 ){
     print "a 的值为: $a\n";
 }
 ```
+
 @tab foreach
+
 ```perl
 @list = (2, 12, 36, 42, 51);
  
@@ -143,7 +145,9 @@ foreach $a (@list){
     print "a 的值为: $a\n";
 }
 ```
+
 @tab endless
+
 ```perl
 # 无限循环
 for( ; ; )
@@ -160,21 +164,38 @@ for( ; ; )
 next;
 ```
 
-
 字符串操作
 
-拼接，使用`.`运算符：
+拼接，使用 `.`运算符：
+
 ```perl
 my $string = "world";
 print "Hello ".$string; # "Hello world"
 ```
 
-
-
-
 ## 高级用法
 
+Perl 可以很方便的用正则表达式进行匹配，很多操作都可以用这个功能实现
 
+判断一个字符串是否匹配一个正则式：
 
+```perl
+if ($string =~ /hel+o/) {
+    print "matched!"; # match hellllllo
+}
+```
 
+## Perl 调试器
 
+Perl可以用自带的调试器方便的调试脚本，启动方法只需要加上 `-d`参数
+
+```sh
+perl -d <script>
+```
+
+下面列出了一系列的常用命令，非常类似GDB:
+
+| 命令              | 解释                         | 示例     |
+| ----------------- | ---------------------------- | -------- |
+| `b [# of line]` | 在当天调试的文件某行设置断点 | `b 19` |
+|                   |                              |          |
