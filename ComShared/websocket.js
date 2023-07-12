@@ -5,6 +5,7 @@ export class webSocketConnector {
     connecting = false;
     reconnect() {
         this.reconnect_timer = setInterval(() => {
+            console.log("check connection", this.connecting);
             if (!this.connecting) this.init(true);
         }, 1000);
     }
@@ -16,8 +17,8 @@ export class webSocketConnector {
         this.ws.onopen = () => {
             console.log("connected!");
             that.connecting = false;
-
             if (that.reconnect_timer) clearInterval(that.reconnect_timer);
+            that.ws.send("status\n");
         }
         this.ws.onerror = (ev) => {
             if (that.ws != null) {
@@ -27,7 +28,10 @@ export class webSocketConnector {
                 console.log("connect failed");
             }
             that.connecting = false;
-            that.reconnect();
+            if (that.reconnect_timer == null) that.reconnect();
+        }
+        this.ws.onmessage = (ev) => {
+            console.log("message received", ev.data);
         }
     }
 }
