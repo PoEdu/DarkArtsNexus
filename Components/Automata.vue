@@ -10,7 +10,7 @@ function loadScript(src, callback) {
     script.src = src;
     if (script.addEventListener) {
         script.addEventListener('load', function () {
-          if (callback) callback();
+          if (callback) callback(); 
         }, false);
     } else if (script.attachEvent) {
         script.attachEvent('onreadystatechange', function () {
