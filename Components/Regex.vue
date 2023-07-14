@@ -33,7 +33,7 @@ const gridOptions = reactive({
   editConfig: {
     trigger: 'click',
     mode: 'cell',
-    showStatus: true
+    showStatus: false
   },
   columns: [
     { type: 'checkbox', width: 50 },
