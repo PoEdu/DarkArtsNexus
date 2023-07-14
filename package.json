@@ -11,6 +11,7 @@
     "update-package": "yarn dlx vp-update"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue-jsx": "^3.0.1",
     "@vssue/api-github-v3": "^1.4.7",
     "@vssue/vuepress-plugin-vssue": "^1.4.8",
     "@vuepress/plugin-register-components": "2.0.0-beta.63",

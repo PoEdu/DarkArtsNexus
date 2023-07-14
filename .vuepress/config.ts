@@ -3,6 +3,8 @@ import { getDirname, path } from '@vuepress/utils'
 import { hopeTheme } from "vuepress-theme-hope";
 import { Navbar } from "./navbar.js";
 import { Sidebar } from "./sidebar.js";
+import { viteBundler } from '@vuepress/bundler-vite';
+
 
 const __dirname = getDirname(import.meta.url)
 
@@ -67,5 +69,11 @@ export default {
                 include: true,
             },
         }
-    })
+    }),
+    bundler: viteBundler({
+    viteOptions: {
+    },
+    vuePluginOptions: {},
+    }),
+    
 }
