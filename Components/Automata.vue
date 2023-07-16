@@ -1,35 +1,26 @@
+<template>
+  <p>Automata</p>
+  <el-row :gutter="80">
+    <el-col :span="12">
+      <div id="graph" />
+    </el-col>
+    <el-col :span="12">
+      <vxe-table :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell' }">
+        <vxe-column type="seq" title="state" width="60"></vxe-column>
+        <vxe-column field="a" title="a" :edit-render="{ name: 'MyInput' }" />
+        <vxe-column field="b" title="b" :edit-render="{ name: 'MyInput' }" />
+        <vxe-column field="c" title="c" :edit-render="{ name: 'MyInput' }" />
+      </vxe-table>
+    </el-col>
+  </el-row>
+</template>
+
+
 <script setup>
-import { h, ref } from 'vue'
+import { h, ref, onMounted } from 'vue'
 import * as graphviz from 'd3-graphviz'
 import { VXETable } from 'vxe-table'
 
-function loadScript(src, callback) {
-  var script = document.createElement('script'),
-    head = document.getElementsByTagName('head')[0];
-  script.type = 'text/javascript';
-  script.src = src;
-  if (script.addEventListener) {
-    script.addEventListener('load', function () {
-      if (callback) callback();
-    }, false);
-  } else if (script.attachEvent) {
-    script.attachEvent('onreadystatechange', function () {
-      var target = window.event.srcElement;
-      if (target.readyState == 'loaded') {
-        if (callback) callback();
-      }
-    });
-  }
-  head.appendChild(script);
-}
-
-loadScript('https://unpkg.com/@hpcc-js/wasm/dist/graphviz.umd.js', function () {
-  graphviz.graphviz('#graph')
-    .width(400)
-    .height(220)
-    .fit(true)
-    .renderDot(gen_dot(tableData.value));
-});
 
 function gen_dot(tb) {
   var end_states = [];
@@ -103,25 +94,15 @@ var tableData = ref([
   { id: 4, end: true }
 ])
 
+onMounted(() => {
+    graphviz.graphviz('#graph')
+    .width(400)
+    .height(220)
+    .fit(true)
+    .renderDot(gen_dot(tableData.value));
+  });
 
 </script>
-
-<template>
-  <p>Automata</p>
-  <el-row :gutter="80">
-    <el-col :span="12">
-      <div id="graph" />
-    </el-col>
-    <el-col :span="12">
-      <vxe-table :data="tableData" :edit-config="{ trigger: 'click', mode: 'cell' }">
-        <vxe-column type="seq" title="state" width="60"></vxe-column>
-        <vxe-column field="a" title="a" :edit-render="{ name: 'MyInput' }" />
-        <vxe-column field="b" title="b" :edit-render="{ name: 'MyInput' }" />
-        <vxe-column field="c" title="c" :edit-render="{ name: 'MyInput' }" />
-      </vxe-table>
-    </el-col>
-  </el-row>
-</template>
 
 <style>
 table {
