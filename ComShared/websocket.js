@@ -23,7 +23,7 @@ export class webSocketConnector {
         this.ws.onerror = (ev) => {
             if (that.ws != null) {
                 console.log("error happens");
-                that.ws.close();
+                that.ws.close();  
             } else {
                 console.log("connect failed");
             }

@@ -24,9 +24,14 @@
     "vuepress-theme-hope": "^2.0.0-beta.228"
   },
   "dependencies": {
+    "@codemirror/lang-cpp": "^6.0.2",
+    "@codemirror/lang-javascript": "^6.1.9",
+    "@codemirror/rangeset": "^0.19.9",
+    "codemirror": "^6.0.1",
     "d3": "^7.8.5",
     "d3-graphviz": "^5.0.2",
     "element-plus": "^2.3.7",
+    "jison": "^0.4.18",
     "sortablejs": "^1.15.0",
     "vxe-table": "^4.4.2",
     "xe-utils": "^3.5.11"
