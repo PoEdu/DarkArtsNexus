@@ -1,5 +1,5 @@
 <template>
-  <p>Automata</p>
+  <p>自动机</p>
   <el-row :gutter="80">
     <el-col :span="12">
       <div id="graph" />
@@ -11,6 +11,7 @@
         <vxe-column field="b" title="b" :edit-render="{ name: 'MyInput' }" />
         <vxe-column field="c" title="c" :edit-render="{ name: 'MyInput' }" />
       </vxe-table>
+      <label>&nbsp;&nbsp;试试在以上表格中输入其他数字</label>
     </el-col>
   </el-row>
 </template>

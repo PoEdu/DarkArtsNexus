@@ -17,7 +17,6 @@ desc: 了解编译器的内部机制
 logo: /icons/compiler.png
 link: /编译原理/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 ```card
@@ -26,7 +25,6 @@ desc: 了解运行时环境的原理
 logo: /icons/compiler-exp.png
 link: /运行时环境/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 ```card
@@ -35,7 +33,6 @@ desc: 学会用编译器框架开发
 logo: /icons/LLVM.png
 link: /LLVM指南/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 ## 编译实践
@@ -46,7 +43,6 @@ desc: 制作一款类C语言编译器
 logo: /icons/C.png
 link: /MiniC/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 ```card
@@ -55,7 +51,6 @@ desc: 制作一款类似Lua的脚本语言解释器
 logo: /icons/Lua.svg
 link: /MiniLua/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 ```card
@@ -64,7 +59,6 @@ desc: 制作类似FlexBison的代码生成工具
 logo: /icons/heckert_gnu_white.png
 link: /MiniFlexBison/序言.md
 color: rgba(230, 230, 230, 0.15)
-
 ```
 
 
@@ -87,14 +81,6 @@ color: rgba(230, 230, 230, 0.15)
 ```
 
 ```card
-title: 设计思想
-desc: 了解复杂软件设计方法
-logo: /icons/design.png
-link: /设计思想/序言.md
-color: rgba(230, 230, 230, 0.15)
-```
-
-```card
 title: 极速教程
 desc: 快速补齐本教程所需基础知识
 logo: /icons/lighting.png
@@ -102,14 +88,6 @@ link: /极速教程/序言.md
 color: rgba(230, 230, 230, 0.15)
 ```
 
-
-```card
-title: 图形学实践
-desc: 学习图形学的基本原理
-logo: /icons/lighting.png
-link: /图形学实践/序言.md
-color: rgba(230, 230, 230, 0.15)
-```
 
 
 <CommentService />
