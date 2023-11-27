@@ -38,6 +38,14 @@ color: rgba(230, 230, 230, 0.15)
 ## 编译实践
 
 ```card
+title: MiniLua
+desc: 制作一款类似Lua的脚本语言
+logo: /icons/Lua.svg
+link: /MiniLua/序言.md
+color: rgba(230, 230, 230, 0.15)
+```
+
+```card
 title: MiniC编译器
 desc: 制作一款类C语言编译器
 logo: /icons/C.png
@@ -46,16 +54,8 @@ color: rgba(230, 230, 230, 0.15)
 ```
 
 ```card
-title: MiniLua
-desc: 制作一款类似Lua的脚本语言解释器
-logo: /icons/Lua.svg
-link: /MiniLua/序言.md
-color: rgba(230, 230, 230, 0.15)
-```
-
-```card
 title: MiniFlexBison
-desc: 制作类似FlexBison的代码生成工具
+desc: 制作类似Flex/Bison的代码生成工具
 logo: /icons/heckert_gnu_white.png
 link: /MiniFlexBison/序言.md
 color: rgba(230, 230, 230, 0.15)
