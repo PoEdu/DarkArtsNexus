@@ -13,6 +13,7 @@ export default {
     lang: "zh-CN",
     title: '现代黑魔法学院',
     description: '一个交互实验式编译器技术学习站',
+    pagePatterns: ['**/*.md', '!**/README.md', '!.vuepress', '!node_modules'],
 
     plugins: [
         registerComponentsPlugin({
