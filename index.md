@@ -35,7 +35,7 @@ link: /LLVM指南/序言.md
 color: rgba(230, 230, 230, 0.15)
 ```
 
-## 编译实践
+<!-- ## 编译实践
 
 ```card
 title: MiniLua
@@ -60,17 +60,17 @@ logo: /icons/heckert_gnu_white.png
 link: /MiniFlexBison/序言.md
 color: rgba(230, 230, 230, 0.15)
 ```
-
+ -->
 
 ## 编程提升
 
-```card
+<!-- ```card
 title: 算法导论
 desc: 梳理算法和其背后思想
 logo: /icons/algorithm.png
 link: /算法导论/序言.md
 color: rgba(230, 230, 230, 0.15)
-```
+``` -->
 
 ```card
 title: 数据结构
