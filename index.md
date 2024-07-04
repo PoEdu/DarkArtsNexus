@@ -35,7 +35,7 @@ link: /LLVM指南/序言.md
 color: rgba(230, 230, 230, 0.15)
 ```
 
-## 编译实践
+<!--## 编译实践
 
 ```card
 title: MiniLua
@@ -45,7 +45,7 @@ link: /MiniLua/序言.md
 color: rgba(230, 230, 230, 0.15)
 ```
 
-<!-- ```card
+ ```card
 title: MiniC编译器
 desc: 制作一款类C语言编译器
 logo: /icons/C.png
