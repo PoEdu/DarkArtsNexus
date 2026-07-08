@@ -1,69 +1,154 @@
 <template>
-    <p>Graph Editor</p>
-    <svg id="container" width="600" height="400"></svg>
-    <ElButton>Button</ElButton>
+    <div class="graph-editor">
+        <p v-if="!hideTitle">Graph Editor</p>
+        <div v-if="allowWeight && selectedLinkInfo" class="link-toolbar">
+            <span>已选边 {{ selectedLinkInfo.source }} → {{ selectedLinkInfo.target }}</span>
+            <label class="weight-label">
+                权重
+                <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    class="weight-input"
+                    v-model.number="selectedLinkInfo.weight"
+                    @change="applyWeightChange"
+                />
+            </label>
+        </div>
+        <p v-if="!directed" class="graph-hint">无向图：新边自动双向连接，方向快捷键已禁用</p>
+        <p v-else-if="allowWeight" class="graph-hint">选中边后可编辑权重；L/R/B 切换方向，Delete 删除</p>
+        <p v-else class="graph-hint">L/R/B 切换方向，Delete 删除，Ctrl+拖拽移动顶点</p>
+        <svg ref="containerRef" :width="width" :height="height"></svg>
+    </div>
 </template>
 
-
 <script setup>
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 
-import {ElButton} from 'element-plus';
+const props = defineProps({
+    width: {
+        type: Number,
+        default: 600,
+    },
+    height: {
+        type: Number,
+        default: 400,
+    },
+    hideTitle: {
+        type: Boolean,
+        default: false,
+    },
+    directed: {
+        type: Boolean,
+        default: true,
+    },
+    allowWeight: {
+        type: Boolean,
+        default: false,
+    },
+    highlights: {
+        type: Object,
+        default: null,
+    },
+    highlightEdges: {
+        type: Array,
+        default: () => [],
+    },
+});
 
-function loadScript(src, callback) {
-    var script = document.createElement('script'),
-        head = document.getElementsByTagName('head')[0];
-    script.type = 'text/javascript';
-    script.src = src;
-    if (script.addEventListener) {
-        script.addEventListener('load', function () {
-            callback();
-        }, false);
-    } else if (script.attachEvent) {
-        script.attachEvent('onreadystatechange', function () {
-            var target = window.event.srcElement;
-            if (target.readyState == 'loaded') {
-                callback();
-            }
-        });
-    }
-    head.appendChild(script);
+const emit = defineEmits(['graph-change']);
+
+const containerRef = ref(null);
+const selectedLinkInfo = ref(null);
+
+let selectedLinkObject = null;
+let applyWeightChangeFn = null;
+let applyHighlightsFn = null;
+
+function edgeKey(a, b) {
+    return a < b ? `${a}-${b}` : `${b}-${a}`;
 }
 
-loadScript('https://d3js.org/d3.v3.min.js', function () {
-    // set up SVG for D3
-    var width = 600,
-        height = 400,
-        colors = d3.scale.category10();
+watch(
+    () => [props.highlights, props.highlightEdges],
+    () => applyHighlightsFn?.(),
+    { deep: true },
+);
 
-    var svg = d3.select('#container');
+function applyWeightChange() {
+    applyWeightChangeFn?.();
+}
 
-    // set up initial nodes and links
-    //  - nodes are known by 'id', not by index in array.
-    //  - reflexive edges are indicated on the node (as a bold black circle).
-    //  - links are always source < target; edge directions are set by 'left' and 'right'.
-    var nodes = [
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        if (window.d3) {
+            resolve(window.d3);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = src;
+        script.onload = () => resolve(window.d3);
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+function serializeGraph(nodes, links) {
+    return {
+        directed: props.directed,
+        allowWeight: props.allowWeight,
+        nodes: nodes.map((node) => ({
+            id: node.id,
+            reflexive: node.reflexive,
+        })),
+        links: links.map((link) => ({
+            source: link.source.id,
+            target: link.target.id,
+            left: link.left,
+            right: link.right,
+            weight: props.allowWeight ? (link.weight ?? 1) : undefined,
+        })),
+    };
+}
+
+onMounted(async () => {
+    const d3 = await loadScript('https://d3js.org/d3.v3.min.js');
+    const svg = d3.select(containerRef.value);
+    const width = props.width;
+    const height = props.height;
+    const colors = d3.scale.category10();
+    const markerId = `graph-${Math.random().toString(36).slice(2, 9)}`;
+
+    let nodes = [
         { id: 0, reflexive: false },
         { id: 1, reflexive: true },
-        { id: 2, reflexive: false }
-    ],
-        lastNodeId = 2,
-        links = [
-            { source: nodes[0], target: nodes[1], left: false, right: true },
-            { source: nodes[1], target: nodes[2], left: false, right: true }
-        ];
+        { id: 2, reflexive: false },
+    ];
+    let lastNodeId = 2;
+    let links = [
+        { source: nodes[0], target: nodes[1], left: false, right: true, weight: 1 },
+        { source: nodes[1], target: nodes[2], left: false, right: true, weight: 1 },
+    ];
 
-    // init D3 force layout
-    var force = d3.layout.force()
+    if (!props.directed) {
+        for (const link of links) {
+            link.left = true;
+            link.right = true;
+        }
+    }
+
+    const force = d3.layout.force()
         .nodes(nodes)
         .links(links)
         .size([width, height])
         .linkDistance(150)
         .charge(-500)
-        .on('tick', tick)
+        .on('tick', tick);
 
-    // define arrow markers for graph links
     svg.append('svg:defs').append('svg:marker')
-        .attr('id', 'end-arrow')
+        .attr('id', `${markerId}-end-arrow`)
         .attr('viewBox', '0 -5 10 10')
         .attr('refX', 6)
         .attr('markerWidth', 3)
@@ -74,7 +159,7 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
         .attr('fill', '#000');
 
     svg.append('svg:defs').append('svg:marker')
-        .attr('id', 'start-arrow')
+        .attr('id', `${markerId}-start-arrow`)
         .attr('viewBox', '0 -5 10 10')
         .attr('refX', 4)
         .attr('markerWidth', 3)
@@ -84,201 +169,257 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
         .attr('d', 'M10,-5L0,0L10,5')
         .attr('fill', '#000');
 
-    // line displayed when dragging new nodes
-    var drag_line = svg.append('svg:path')
+    const dragLine = svg.append('svg:path')
         .attr('class', 'link dragline hidden')
         .attr('d', 'M0,0L0,0');
 
-    // handles to link and node element groups
-    var path = svg.append('svg:g').selectAll('path'),
-        circle = svg.append('svg:g').selectAll('g');
+    let path = svg.append('svg:g').selectAll('path');
+    let linkLabels = svg.append('svg:g').selectAll('text.link-weight');
+    let circle = svg.append('svg:g').selectAll('g');
 
-    // mouse event vars
-    var selected_node = null,
-        selected_link = null,
-        mousedown_link = null,
-        mousedown_node = null,
-        mouseup_node = null;
+    let selectedNode = null;
+    let selectedLink = null;
+    let mousedownLink = null;
+    let mousedownNode = null;
+    let mouseupNode = null;
+    let lastKeyDown = -1;
 
     function resetMouseVars() {
-        mousedown_node = null;
-        mouseup_node = null;
-        mousedown_link = null;
+        mousedownNode = null;
+        mouseupNode = null;
+        mousedownLink = null;
     }
 
-    // update force layout (called automatically each iteration)
+    function syncSelection() {
+        if (selectedLink && props.allowWeight) {
+            selectedLinkInfo.value = {
+                source: selectedLink.source.id,
+                target: selectedLink.target.id,
+                weight: selectedLink.weight ?? 1,
+            };
+            selectedLinkObject = selectedLink;
+        } else {
+            selectedLinkInfo.value = null;
+            selectedLinkObject = null;
+        }
+    }
+
+    applyWeightChangeFn = () => {
+        if (!selectedLinkObject || !selectedLinkInfo.value) return;
+        selectedLinkObject.weight = Number(selectedLinkInfo.value.weight) || 1;
+        restart();
+    };
+
+    applyHighlightsFn = () => {
+        const states = props.highlights || {};
+        svg.selectAll('circle.node')
+            .classed('hl-current', (d) => d && states[d.id] === 'current')
+            .classed('hl-visited', (d) => d && states[d.id] === 'visited')
+            .classed('hl-frontier', (d) => d && states[d.id] === 'frontier');
+
+        const edgeSet = new Set((props.highlightEdges || []).map((e) => edgeKey(e.from, e.to)));
+        svg.selectAll('path.link')
+            .classed('hl-edge', (d) => !!(d && d.source && edgeSet.has(edgeKey(d.source.id, d.target.id))));
+    };
+
+    function notifyGraphChange() {
+        emit('graph-change', serializeGraph(nodes, links));
+    }
+
+    function linkMarkers(link) {
+        if (!props.directed) {
+            return {
+                start: link.left ? `url(#${markerId}-start-arrow)` : '',
+                end: link.right ? `url(#${markerId}-end-arrow)` : '',
+            };
+        }
+        return {
+            start: link.left ? `url(#${markerId}-start-arrow)` : '',
+            end: link.right ? `url(#${markerId}-end-arrow)` : '',
+        };
+    }
+
     function tick() {
-        // draw directed edges with proper padding from node centers
         path.attr('d', function (d) {
-            var deltaX = d.target.x - d.source.x,
-                deltaY = d.target.y - d.source.y,
-                dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
-                normX = deltaX / dist,
-                normY = deltaY / dist,
-                sourcePadding = d.left ? 17 : 12,
-                targetPadding = d.right ? 17 : 12,
-                sourceX = d.source.x + (sourcePadding * normX),
-                sourceY = d.source.y + (sourcePadding * normY),
-                targetX = d.target.x - (targetPadding * normX),
-                targetY = d.target.y - (targetPadding * normY);
+            const deltaX = d.target.x - d.source.x;
+            const deltaY = d.target.y - d.source.y;
+            const dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            const normX = deltaX / dist;
+            const normY = deltaY / dist;
+            const sourcePadding = d.left ? 17 : 12;
+            const targetPadding = d.right ? 17 : 12;
+            const sourceX = d.source.x + (sourcePadding * normX);
+            const sourceY = d.source.y + (sourcePadding * normY);
+            const targetX = d.target.x - (targetPadding * normX);
+            const targetY = d.target.y - (targetPadding * normY);
             return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
         });
+
+        if (props.allowWeight) {
+            linkLabels
+                .attr('x', (d) => (d.source.x + d.target.x) / 2)
+                .attr('y', (d) => (d.source.y + d.target.y) / 2 - 6);
+        }
 
         circle.attr('transform', function (d) {
             return 'translate(' + d.x + ',' + d.y + ')';
         });
     }
 
-    // update graph (called when needed)
+    function applyLinkSelectionStyle(selection) {
+        selection
+            .classed('selected', (d) => d === selectedLink)
+            .style('marker-start', (d) => linkMarkers(d).start)
+            .style('marker-end', (d) => linkMarkers(d).end);
+    }
+
+    function createLink(source, target, direction) {
+        let link = links.find((item) => item.source === source && item.target === target);
+
+        if (link) {
+            if (props.directed) {
+                link[direction] = true;
+            } else {
+                link.left = true;
+                link.right = true;
+            }
+        } else {
+            link = {
+                source,
+                target,
+                left: !props.directed,
+                right: !props.directed,
+                weight: 1,
+            };
+            if (props.directed) {
+                link[direction] = true;
+            }
+            links.push(link);
+        }
+
+        return link;
+    }
+
     function restart() {
-        // path (link) group
         path = path.data(links);
+        applyLinkSelectionStyle(path);
 
-        // update existing links
-        path.classed('selected', function (d) { return d === selected_link; })
-            .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
-            .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; });
-
-
-        // add new links
         path.enter().append('svg:path')
             .attr('class', 'link')
-            .classed('selected', function (d) { return d === selected_link; })
-            .style('marker-start', function (d) { return d.left ? 'url(#start-arrow)' : ''; })
-            .style('marker-end', function (d) { return d.right ? 'url(#end-arrow)' : ''; })
+            .call(applyLinkSelectionStyle)
             .on('mousedown', function (d) {
                 if (d3.event.ctrlKey) return;
 
-                // select link
-                mousedown_link = d;
-                if (mousedown_link === selected_link) selected_link = null;
-                else selected_link = mousedown_link;
-                selected_node = null;
+                mousedownLink = d;
+                selectedLink = mousedownLink === selectedLink ? null : mousedownLink;
+                selectedNode = null;
                 restart();
             });
 
-        // remove old links
         path.exit().remove();
 
+        if (props.allowWeight) {
+            linkLabels = linkLabels.data(links, (d) => `${d.source.id}-${d.target.id}`);
 
-        // circle (node) group
-        // NB: the function arg is crucial here! nodes are known by id, not by index!
-        circle = circle.data(nodes, function (d) { return d.id; });
+            linkLabels.enter().append('text')
+                .attr('class', 'link-weight')
+                .attr('text-anchor', 'middle')
+                .text((d) => d.weight ?? 1);
 
-        // update existing nodes (reflexive & selected visual states)
+            linkLabels.text((d) => d.weight ?? 1);
+            linkLabels.exit().remove();
+        }
+
+        circle = circle.data(nodes, (d) => d.id);
+
         circle.selectAll('circle')
-            .style('fill', function (d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
-            .classed('reflexive', function (d) { return d.reflexive; });
+            .style('fill', (d) => (d === selectedNode ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id)))
+            .classed('reflexive', (d) => d.reflexive);
 
-        // add new nodes
-        var g = circle.enter().append('svg:g');
+        const g = circle.enter().append('svg:g');
 
         g.append('svg:circle')
             .attr('class', 'node')
             .attr('r', 12)
-            .style('fill', function (d) { return (d === selected_node) ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id); })
-            .style('stroke', function (d) { return d3.rgb(colors(d.id)).darker().toString(); })
-            .classed('reflexive', function (d) { return d.reflexive; })
+            .style('fill', (d) => (d === selectedNode ? d3.rgb(colors(d.id)).brighter().toString() : colors(d.id)))
+            .style('stroke', (d) => d3.rgb(colors(d.id)).darker().toString())
+            .classed('reflexive', (d) => d.reflexive)
             .on('mouseover', function (d) {
-                if (!mousedown_node || d === mousedown_node) return;
-                // enlarge target node
+                if (!mousedownNode || d === mousedownNode) return;
                 d3.select(this).attr('transform', 'scale(1.1)');
             })
             .on('mouseout', function (d) {
-                if (!mousedown_node || d === mousedown_node) return;
-                // unenlarge target node
+                if (!mousedownNode || d === mousedownNode) return;
                 d3.select(this).attr('transform', '');
             })
             .on('mousedown', function (d) {
                 if (d3.event.ctrlKey) return;
 
-                // select node
-                mousedown_node = d;
-                if (mousedown_node === selected_node) selected_node = null;
-                else selected_node = mousedown_node;
-                selected_link = null;
+                mousedownNode = d;
+                selectedNode = mousedownNode === selectedNode ? null : mousedownNode;
+                selectedLink = null;
 
-                // reposition drag line
-                drag_line
-                    .style('marker-end', 'url(#end-arrow)')
+                dragLine
+                    .style('marker-end', props.directed ? `url(#${markerId}-end-arrow)` : '')
                     .classed('hidden', false)
-                    .attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + mousedown_node.x + ',' + mousedown_node.y);
+                    .attr('d', 'M' + mousedownNode.x + ',' + mousedownNode.y + 'L' + mousedownNode.x + ',' + mousedownNode.y);
 
                 restart();
             })
             .on('mouseup', function (d) {
-                if (!mousedown_node) return;
+                if (!mousedownNode) return;
 
-                // needed by FF
-                drag_line
+                dragLine
                     .classed('hidden', true)
                     .style('marker-end', '');
 
-                // check for drag-to-self
-                mouseup_node = d;
-                if (mouseup_node === mousedown_node) { resetMouseVars(); return; }
+                mouseupNode = d;
+                if (mouseupNode === mousedownNode) {
+                    resetMouseVars();
+                    return;
+                }
 
-                // unenlarge target node
                 d3.select(this).attr('transform', '');
 
-                // add link to graph (update if exists)
-                // NB: links are strictly source < target; arrows separately specified by booleans
-                var source, target, direction;
-                if (mousedown_node.id < mouseup_node.id) {
-                    source = mousedown_node;
-                    target = mouseup_node;
+                let source;
+                let target;
+                let direction;
+                if (mousedownNode.id < mouseupNode.id) {
+                    source = mousedownNode;
+                    target = mouseupNode;
                     direction = 'right';
                 } else {
-                    source = mouseup_node;
-                    target = mousedown_node;
+                    source = mouseupNode;
+                    target = mousedownNode;
                     direction = 'left';
                 }
 
-                var link;
-                link = links.filter(function (l) {
-                    return (l.source === source && l.target === target);
-                })[0];
-
-                if (link) {
-                    link[direction] = true;
-                } else {
-                    link = { source: source, target: target, left: false, right: false };
-                    link[direction] = true;
-                    links.push(link);
-                }
-
-                // select new link
-                selected_link = link;
-                selected_node = null;
+                selectedLink = createLink(source, target, direction);
+                selectedNode = null;
                 restart();
             });
 
-        // show node IDs
         g.append('svg:text')
             .attr('x', 0)
             .attr('y', 4)
             .attr('class', 'id')
-            .text(function (d) { return d.id; });
+            .text((d) => d.id);
 
-        // remove old nodes
         circle.exit().remove();
 
-        // set the graph in motion
+        syncSelection();
+        applyHighlightsFn();
         force.start();
+        notifyGraphChange();
     }
 
     function mousedown() {
-        // prevent I-bar on drag
-        //d3.event.preventDefault();
-
-        // because :active only works in WebKit?
         svg.classed('active', true);
 
-        if (d3.event.ctrlKey || mousedown_node || mousedown_link) return;
+        if (d3.event.ctrlKey || mousedownNode || mousedownLink) return;
 
-        // insert new node at point
-        var point = d3.mouse(this),
-            node = { id: ++lastNodeId, reflexive: false };
+        const point = d3.mouse(this);
+        const node = { id: ++lastNodeId, reflexive: false };
         node.x = point[0];
         node.y = point[1];
         nodes.push(node);
@@ -287,40 +428,29 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
     }
 
     function mousemove() {
-        if (!mousedown_node) return;
+        if (!mousedownNode) return;
 
-        // update drag line
-        drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
-
+        dragLine.attr('d', 'M' + mousedownNode.x + ',' + mousedownNode.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
         restart();
     }
 
     function mouseup() {
-        if (mousedown_node) {
-            // hide drag line
-            drag_line
+        if (mousedownNode) {
+            dragLine
                 .classed('hidden', true)
                 .style('marker-end', '');
         }
 
-        // because :active only works in WebKit?
         svg.classed('active', false);
-
-        // clear mouse event vars
         resetMouseVars();
     }
 
     function spliceLinksForNode(node) {
-        var toSplice = links.filter(function (l) {
-            return (l.source === node || l.target === node);
-        });
-        toSplice.map(function (l) {
-            links.splice(links.indexOf(l), 1);
-        });
+        const toSplice = links.filter((l) => l.source === node || l.target === node);
+        for (const link of toSplice) {
+            links.splice(links.indexOf(link), 1);
+        }
     }
-
-    // only respond once per keydown
-    var lastKeyDown = -1;
 
     function keydown() {
         d3.event.preventDefault();
@@ -328,50 +458,50 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
         if (lastKeyDown !== -1) return;
         lastKeyDown = d3.event.keyCode;
 
-        // ctrl
         if (d3.event.keyCode === 17) {
             circle.call(force.drag);
             svg.classed('ctrl', true);
         }
 
-        if (!selected_node && !selected_link) return;
+        if (!selectedNode && !selectedLink) return;
         switch (d3.event.keyCode) {
-            case 8: // backspace
-            case 46: // delete
-                if (selected_node) {
-                    nodes.splice(nodes.indexOf(selected_node), 1);
-                    spliceLinksForNode(selected_node);
-                } else if (selected_link) {
-                    links.splice(links.indexOf(selected_link), 1);
+            case 8:
+            case 46:
+                if (selectedNode) {
+                    nodes.splice(nodes.indexOf(selectedNode), 1);
+                    spliceLinksForNode(selectedNode);
+                } else if (selectedLink) {
+                    links.splice(links.indexOf(selectedLink), 1);
                 }
-                selected_link = null;
-                selected_node = null;
+                selectedLink = null;
+                selectedNode = null;
                 restart();
                 break;
-            case 66: // B
-                if (selected_link) {
-                    // set link direction to both left and right
-                    selected_link.left = true;
-                    selected_link.right = true;
-                }
-                restart();
-                break;
-            case 76: // L
-                if (selected_link) {
-                    // set link direction to left only
-                    selected_link.left = true;
-                    selected_link.right = false;
+            case 66:
+                if (selectedLink && props.directed) {
+                    selectedLink.left = true;
+                    selectedLink.right = true;
                 }
                 restart();
                 break;
-            case 82: // R
-                if (selected_node) {
-                    // toggle node reflexivity
-                    selected_node.reflexive = !selected_node.reflexive;
-                } else if (selected_link) {
-                    // set link direction to right only
-                    selected_link.left = false;
-                    selected_link.right = true;
+            case 76:
+                if (selectedLink && props.directed) {
+                    selectedLink.left = true;
+                    selectedLink.right = false;
+                }
+                restart();
+                break;
+            case 87:
+                if (selectedLink && props.allowWeight) {
+                    syncSelection();
+                }
+                break;
+            case 82:
+                if (selectedNode) {
+                    selectedNode.reflexive = !selectedNode.reflexive;
+                } else if (selectedLink && props.directed) {
+                    selectedLink.left = false;
+                    selectedLink.right = true;
                 }
                 restart();
                 break;
@@ -381,7 +511,6 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
     function keyup() {
         lastKeyDown = -1;
 
-        // ctrl
         if (d3.event.keyCode === 17) {
             circle
                 .on('mousedown.drag', null)
@@ -390,20 +519,60 @@ loadScript('https://d3js.org/d3.v3.min.js', function () {
         }
     }
 
-    // app starts here
     svg.on('mousedown', mousedown)
         .on('mousemove', mousemove)
         .on('mouseup', mouseup);
     d3.select(window)
         .on('keydown', keydown)
         .on('keyup', keyup);
+
     restart();
 
-
+    onUnmounted(() => {
+        d3.select(window)
+            .on('keydown', null)
+            .on('keyup', null);
+    });
 });
-</script> 
+</script>
 
-<style>
+<style scoped>
+.graph-editor p {
+    margin: 0 0 8px;
+}
+
+.graph-hint {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: var(--vp-c-text-2, #909399);
+}
+
+.link-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--vp-c-divider, #dcdfe6);
+    border-radius: 6px;
+    background: var(--vp-c-bg-soft, #f5f7fa);
+    font-size: 13px;
+}
+
+.weight-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.weight-input {
+    width: 72px;
+    padding: 4px 8px;
+    border: 1px solid var(--vp-c-divider, #dcdfe6);
+    border-radius: 4px;
+}
+
 svg {
     background-color: #FFF;
     cursor: default;
@@ -418,46 +587,71 @@ svg:not(.active):not(.ctrl) {
     cursor: crosshair;
 }
 
-path.link {
+:deep(path.link) {
     fill: none;
     stroke: #000;
     stroke-width: 3px;
     cursor: default;
 }
 
-svg:not(.active):not(.ctrl) path.link {
+svg:not(.active):not(.ctrl) :deep(path.link) {
     cursor: pointer;
 }
 
-path.link.selected {
+:deep(path.link.selected) {
     stroke-dasharray: 10, 2;
 }
 
-path.link.dragline {
+:deep(path.link.dragline) {
     pointer-events: none;
 }
 
-path.link.hidden {
+:deep(path.link.hidden) {
     stroke-width: 0;
 }
 
-circle.node {
+:deep(circle.node) {
     stroke-width: 1.5px;
     cursor: pointer;
 }
 
-circle.node.reflexive {
+:deep(circle.node.reflexive) {
     stroke: #000 !important;
     stroke-width: 2.5px;
 }
 
-text {
+:deep(circle.node.hl-visited) {
+    stroke: #67c23a !important;
+    stroke-width: 4px;
+}
+
+:deep(circle.node.hl-frontier) {
+    stroke: #e6a23c !important;
+    stroke-width: 4px;
+}
+
+:deep(circle.node.hl-current) {
+    stroke: #f56c6c !important;
+    stroke-width: 5px;
+}
+
+:deep(path.link.hl-edge) {
+    stroke: #67c23a;
+    stroke-width: 5px;
+}
+
+:deep(text) {
     font: 12px sans-serif;
     pointer-events: none;
 }
 
-text.id {
+:deep(text.id) {
     text-anchor: middle;
     font-weight: bold;
+}
+
+:deep(text.link-weight) {
+    fill: var(--vp-c-brand, #409eff);
+    font-weight: 700;
 }
 </style>
