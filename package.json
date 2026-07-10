@@ -4,16 +4,19 @@
   "main": "index.js",
   "type": "module",
   "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=18",
+    "yarn": "1.22.x"
+  },
   "scripts": {
     "build": "vuepress build",
     "clean-dev": "vuepress dev --clean-cache",
     "dev": "vuepress dev",
-    "update-package": "yarn dlx vp-update"
+    "update-package": "npx vp-update"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "@vssue/api-github-v3": "^1.4.7",
-    "@vssue/vuepress-plugin-vssue": "^1.4.8",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
     "@vuepress/plugin-register-components": "2.0.0-beta.63",
     "vue": "3.3.4",
     "vuepress": "2.0.0-beta.63",
@@ -21,7 +24,7 @@
     "vuepress-plugin-copy-code2": "2.0.0-beta.226",
     "vuepress-plugin-markdown-define2": "^1.0.0",
     "vuepress-plugin-md-enhance": "2.0.0-beta.226",
-    "vuepress-theme-hope": "^2.0.0-beta.228"
+    "vuepress-theme-hope": "2.0.0-beta.228"
   },
   "dependencies": {
     "@codemirror/lang-cpp": "^6.0.2",
