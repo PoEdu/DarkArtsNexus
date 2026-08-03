@@ -68,6 +68,8 @@ export default {
                 attrs: true,
                 footnote: true,
                 include: true,
+                // 启用后正文 $...$ / $$...$$ 才会按 KaTeX 渲染
+                katex: true,
             },
         }
     }),
